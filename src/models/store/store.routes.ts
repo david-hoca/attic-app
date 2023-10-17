@@ -1,10 +1,15 @@
 import express from "express";
 import storeContr from "./store.contr.js";
+import idAndTokenChecker from "../../middleware/idAndTokenChecker.js";
+
 const app = express.Router();
-let { post, put, getAll, getOne } = storeContr;
+let { post, getById, getAll, put,del } = storeContr;
+let { idChecker } = idAndTokenChecker;
+
 app.post("/", post);
-app.put("/:id", put);
+app.put("/:id",idChecker, put);
 app.get("/", getAll);
-app.get("/:id", getOne);
+app.get("/:id",idChecker, getById);
+app.delete("/:id",idChecker, del);
 
 export default app;

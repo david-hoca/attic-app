@@ -1,15 +1,44 @@
 import mongoose, { model, Schema } from "mongoose";
 const storeSchema = new Schema({
-    catName: {
+    storeTitle: {
         type: String,
         required: true,
-        unique: true,
     },
-    stores: [
+    storeLogo: {
+        type: String,
+    },
+    review: [
         {
-            ref: "Store",
+            ref: "Review",
             type: mongoose.Types.ObjectId,
         },
     ],
+    posts: [
+        {
+            ref: "StorePosts",
+            type: mongoose.Types.ObjectId,
+        },
+    ],
+    storeImgs: [
+        {
+            type: String,
+        },
+    ],
+    storeRating: {
+        type: [String, Number],
+    },
+    phone: {
+        type: String,
+    },
+    saveCount: {
+        type: String,
+    },
+    location: {
+        type: String,
+    },
+    category: {
+        ref: "category",
+        type: mongoose.Types.ObjectId,
+    },
 });
-export default model("category");
+export default model("Store", storeSchema);

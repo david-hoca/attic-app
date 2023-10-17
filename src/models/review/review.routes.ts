@@ -1,12 +1,14 @@
 import express from "express";
 import idAndTokenChecker from "../../middleware/idAndTokenChecker.js";
-import catContr from "./cat.contr.js";
+import reviewContr from "./review.contr.js";
+
 const app = express.Router();
-let { post, put, getAll, getOne, del } = catContr;
+let { post, getByStoreId, put, del } = reviewContr;
 let { idChecker } = idAndTokenChecker;
+
 app.post("/", post);
 app.put("/:id", idChecker, put);
-app.get("/", getAll);
-app.get("/:id", idChecker, getOne);
+app.get("/:id", idChecker, getByStoreId);
 app.delete("/:id", idChecker, del);
+
 export default app;

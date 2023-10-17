@@ -63,7 +63,7 @@ export default {
   },
     async getAll(req: Request, res: Response) {
       try {
-          let data = await catSchema.find()
+          let data = await catSchema.find().populate("stores")
           res.json({data})
       } catch (error:any) {
          res.status(500).json({
@@ -74,7 +74,7 @@ export default {
   },
     async getOne(req: Request, res: Response) {
       try {
-          let data = await catSchema.findById(req.params.id)
+          let data = await catSchema.findById(req.params.id).populate("stores")
           res.json({data})
       } catch (error:any) {
          res.status(500).json({

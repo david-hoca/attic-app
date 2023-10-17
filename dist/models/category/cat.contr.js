@@ -73,7 +73,7 @@ export default {
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let data = yield catSchema.find();
+                let data = yield catSchema.find().populate("stores");
                 res.json({ data });
             }
             catch (error) {
@@ -87,7 +87,7 @@ export default {
     getOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let data = yield catSchema.findById(req.params.id);
+                let data = yield catSchema.findById(req.params.id).populate("stores");
                 res.json({ data });
             }
             catch (error) {
