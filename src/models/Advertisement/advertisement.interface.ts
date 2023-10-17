@@ -6,3 +6,8 @@ export interface IAdvertisement extends Document {
     description: string;
     url: string;
 }
+export interface IVideoInfo extends Document {
+    title: string;
+    description: string;
+    url: string;
+}

@@ -1,12 +1,10 @@
-import mongoose, { Model, Schema } from 'mongoose';
-import { IsEmail, IsEnum, IsString, MinLength } from 'class-validator';
-import { IUser, UserRole } from './user.interface';
-export interface IUserModel extends Model<IUser> { }
+import mongoose, { Schema } from 'mongoose';
+import { IsEmail, IsString, MinLength } from 'class-validator';
+import { IUser, IUserModel } from './user.interface';
 const userSchema = new Schema<IUser, IUserModel>({
     username: {
         type: String,
         required: true,
-        unique: true,
         validate: [IsString, MinLength(3)],
     },
     email: {
@@ -18,12 +16,13 @@ const userSchema = new Schema<IUser, IUserModel>({
     password: {
         type: String,
         required: true,
-        validate: [IsString, MinLength(8)],
+        validate: [IsString, MinLength(4)],
     },
     role: {
         type: String,
         required: true,
-        validate: [IsEnum(UserRole)],
+        enum: ["super_admin", "user", "product_admin"],
+        default: 'user'
     },
     boughtPost: [{
         type: Schema.Types.ObjectId,

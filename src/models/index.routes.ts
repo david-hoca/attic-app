@@ -4,5 +4,5 @@ import userRouter from "./User/user.routes.js";
 import advertisementRouter from "./Advertisement/advertisement.routes.js";
 router.use('/test', () => { });
 router.use('/user', userRouter);
-router.use('/user', advertisementRouter);
+router.use('/advertisement', advertisementRouter);
 export default router;

@@ -26,7 +26,6 @@ client.on('error', function (error) {
 // Redis ga ma'lumot yozish va olish uchun yordamchi funksiyalar
 const asyncGet = promisify(client.get).bind(client);
 const asyncSet = promisify(client.set).bind(client);
-
 // Redisga ma'lumotni yozish
 async function setRedisData(key: string, value: any): Promise<void> {
     try {
@@ -65,4 +64,4 @@ async function deleteRedisData(key: string): Promise<void> {
         throw new Error('Redisdan ma\'lumotni o\'chirishda xatolik yuz berdi');
     }
 }
-export { setRedisData, getRedisData, updateRedisData, deleteRedisData };
+export { setRedisData, getRedisData, updateRedisData, deleteRedisData, client };

@@ -2,7 +2,7 @@ import mongoose, { Model, Schema } from 'mongoose';
 import { IsEmail, IsEnum, IsString, MinLength } from 'class-validator';
 import { IAdvertisement } from './advertisement.interface';
 export interface IAdvertisementModel extends Model<IAdvertisement> { }
-const userSchema = new Schema<IAdvertisement, IAdvertisementModel>({
+const advertisementSchema = new Schema<IAdvertisement, IAdvertisementModel>({
     title: {
         type: String,
         required: true,
@@ -21,6 +21,6 @@ const userSchema = new Schema<IAdvertisement, IAdvertisementModel>({
     },
 
 });
-const UserModel = mongoose.model<IAdvertisement, IAdvertisementModel>('User', userSchema);
+const AdvertisementSchemaModel = mongoose.model<IAdvertisement, IAdvertisementModel>('Advertisement', advertisementSchema);
 
-export default UserModel;
+export default AdvertisementSchemaModel;
