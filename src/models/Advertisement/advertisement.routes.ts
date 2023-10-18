@@ -14,7 +14,7 @@ advertisementRouter.get('/:id', AdvertisementController.gatAdvertisementById);
 
 // Update user by ID
 advertisementRouter.put('/:id',authMiddleware, superAdminMiddleware, AdvertisementController.updateAdvertisement);
-
+ 
 // Delete user by ID
 advertisementRouter.delete('/:id',authMiddleware, superAdminMiddleware, AdvertisementController.deleteAdvertisement);
 
