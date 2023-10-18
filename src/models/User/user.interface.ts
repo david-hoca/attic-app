@@ -6,5 +6,6 @@ export interface IUser extends Document {
     role: "user" | "super_admin" | "product_admin";
     boughtPost: mongoose.Types.ObjectId[];
     likedPost: mongoose.Types.ObjectId[];
+    savedStore: mongoose.Types.ObjectId[];
 }
 export interface IUserModel extends Model<IUser> { }
