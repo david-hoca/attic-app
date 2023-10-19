@@ -39,6 +39,7 @@ const userSchema = new Schema<IUser, IUserModel>({
         ref: 'shopStore',
         default: [],
     }],
+    viewedPosts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
 });
 const UserModel = mongoose.model<IUser, IUserModel>('User', userSchema);
 

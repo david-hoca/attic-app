@@ -21,7 +21,6 @@ class PostController {
             handleError(res, error);
         }
     };
-
     // Get all posts
     public getAllPosts = async (req: Request, res: Response): Promise<void> => {
         try {
@@ -45,6 +44,11 @@ class PostController {
                 post.view += 1;
                 post.uniqueViews.push(userId);
                 await post.save();
+                const user = await UserModel.findById(userId);
+                if (user) {
+                    user.viewedPosts.push(post._id);
+                    await user.save();
+                }
             }
 
             res.status(200).json(post);
@@ -56,7 +60,6 @@ class PostController {
     public updatePost = async (req: Request, res: Response): Promise<void> => {
         // Implement the update logic
     };
-
     // Delete post by ID
     public deletePost = async (req: Request, res: Response): Promise<void> => {
         // Implement the delete logic
@@ -66,19 +69,16 @@ class PostController {
         try {
             const { id } = req.params;
             const userId = req.user.id; // Assuming user ID is available in the request
-
             const post = await PostModel.findById(id);
             if (!post) {
                 res.status(404).json({ error: 'Post not found' });
                 return;
             }
-
             const user = await UserModel.findById(userId);
             if (!user) {
                 res.status(404).json({ error: 'User not found' });
                 return;
             }
-
             if (!post.likes.includes(userId)) {
                 post.likes.push(userId);
                 await post.save();
@@ -91,7 +91,6 @@ class PostController {
                 // Remove the liked post from the user's likedPosts
                 user.likedPost = user.likedPost.filter((postId) => !postId.equals(post._id));
                 await user.save();
-
                 // Remove the user from the post's likes
                 post.likes = post.likes.filter((likedUserId) => !likedUserId.equals(userId));
                 await post.save();
