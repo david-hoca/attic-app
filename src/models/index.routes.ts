@@ -7,6 +7,6 @@ import postCategoryRouter from "./PostCategory/postCategory.routes.js";
 router.use('/test', () => { });
 router.use('/user', userRouter);
 router.use('/postCategory', postCategoryRouter);
-router.use('/advertisement', advertisementRouter);
+router.use('/advertisement', advertisementRouter); 
 router.use('/post', postRouter);
 export default router;
