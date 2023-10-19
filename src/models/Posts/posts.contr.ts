@@ -6,6 +6,7 @@ import UserModel from '../User/user.model.js';
 import { IPost } from './posts.interface.js';
 import path from 'path';
 import fs from 'fs';
+import postCategorySchema from '../PostCategory/postCategory.schema.js';
 class PostController {
     // Create a new post
     public createPost = async (req: Request, res: Response): Promise<void> => {
@@ -16,14 +17,17 @@ class PostController {
                 user: req.user.id,
                 title,
                 img,
+                cat_id,
             });
-
+            let postCategory = await postCategorySchema.findById(cat_id)
+            if (postCategory) {
+                postCategory.posts.push(newPost._id)
+                await postCategory.save();
+            } else {
+                throw Error("post category not found")
+            }
             const savedPost = await newPost.save();
-            // let postCategory = await UserModel.findById(cat_id)
-            // if (postCategory) {
-            //     postCategory.posts.push(newPost._id)
-            //     await postCategory.save();
-            // }
+
             res.status(201).json(savedPost);
         } catch (error: any) {
             handleError(res, error);

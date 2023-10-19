@@ -2,6 +2,8 @@
 
 import express from "express";
 import PostCategoryController from "./postCategory.contr.js";
+import authMiddleware from "../../middleware/auth.js";
+import { superAdminMiddleware } from "../../middleware/admins.js";
 
 const postCategoryRouter = express.Router();
 
@@ -9,11 +11,11 @@ const postCategoryRouter = express.Router();
 
 //  superAdminAuthorization, middleware
 postCategoryRouter
-  .post("/", PostCategoryController.POST_CATEGORY_func)
+  .post("/", authMiddleware, superAdminMiddleware, PostCategoryController.POST_CATEGORY_func)
   .get("/", PostCategoryController.GET_CATEGORY_func)
   .get("/:id", PostCategoryController.GET_CATEGORYBYID_func)
-  .put("/:id", PostCategoryController.UPDATE_CATEGORY)
-  .delete("/:id", PostCategoryController.DELETE_CATEGORY);
+  .put("/:id", authMiddleware, superAdminMiddleware, PostCategoryController.UPDATE_CATEGORY)
+  .delete("/:id", authMiddleware, superAdminMiddleware, PostCategoryController.DELETE_CATEGORY);
 
 // POSTS CRUD ROUTES (for authenticated users)
 

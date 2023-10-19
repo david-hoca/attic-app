@@ -8,7 +8,7 @@ class PostCategoryController {
     try {
       const { cat_name } = req.body;
 
-      const PostCategory = new postCategory({ cat_name });
+      const PostCategory = new postCategory({ cat_name })
 
       const result = await PostCategory.save();
       res.json(result);
@@ -22,7 +22,7 @@ class PostCategoryController {
     res: Response
   ): Promise<void> => {
     try {
-      const result = await postCategory.find();
+      const result = await postCategory.find().populate('posts');
       res.json(result);
     } catch (error: any) {
       res.status(500).json({ error: (error as Error).message });
@@ -35,7 +35,7 @@ class PostCategoryController {
   ): Promise<void> => {
     try {
       const id = req.params.id;
-      const result = await postCategory.findById(id);
+      const result = await postCategory.findById(id).populate('posts');;
       res.json(result);
     } catch (error: any) {
       res.status(500).json({ error: (error as Error).message });
