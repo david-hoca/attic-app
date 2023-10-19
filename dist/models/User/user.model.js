@@ -1,0 +1,43 @@
+import mongoose, { Schema } from 'mongoose';
+import { IsEmail, IsString, MinLength } from 'class-validator';
+const userSchema = new Schema({
+    username: {
+        type: String,
+        required: true,
+        validate: [IsString, MinLength(3)],
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        validate: [IsEmail],
+    },
+    password: {
+        type: String,
+        required: true,
+        validate: [IsString, MinLength(4)],
+    },
+    role: {
+        type: String,
+        required: true,
+        enum: ["super_admin", "user", "product_admin"],
+        default: 'user'
+    },
+    boughtPost: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Post',
+            default: [],
+        }],
+    likedPost: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Post',
+            default: [],
+        }],
+    savedStore: [{
+            type: Schema.Types.ObjectId,
+            ref: 'shopStore',
+            default: [],
+        }],
+});
+const UserModel = mongoose.model('User', userSchema);
+export default UserModel;

@@ -33,7 +33,8 @@ const storeSchema: any = new Schema({
     type: String,
   },
   saveCount: {
-    type: String,
+    type: String || Number,
+    default:0
   },
   location: {
     type: String,

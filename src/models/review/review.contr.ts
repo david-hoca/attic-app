@@ -3,7 +3,7 @@ import Store from "../store/store.schema.js";
 import Review from "./review.model.js";
 
 export default {
-  async post(req: Request, res: Response) {
+  async post(req: Request, res: Response) { 
     try {
       const { content, userId, stars } = req.body;
 

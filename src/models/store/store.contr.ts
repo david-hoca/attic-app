@@ -4,6 +4,10 @@ import path from "path/posix";
 import Store from "./store.schema.js";
 import catSchema from "../category/cat.schema.js";
 import fs from "fs";
+import User from "../User/user.model.js";
+import { JWT } from "../../utils/jwt.js";
+import { log } from "console";
+
 export default {
   async post(req: Request, res: Response) {
     try {
@@ -192,4 +196,47 @@ export default {
       res.status(500).json({ message: "Internal server error" });
     }
   },
+  async save(req: Request, res: Response) {
+    try {
+    let token: any = req.headers.token;
+     const { id: userId } = JWT.VERIFY(token) as { id: string };
+     const storeId = req.params.id; // Get the store ID from the route parameters
+     
+     // Find the user by ID
+     const user:any = await User.findById(userId);
+     
+     if (!user) {
+       return res.status(404).json({ message: "User not found" });
+      }
+
+     // Check if the store is already saved by the user
+      const isStoreSaved = user.savedStore.includes(storeId);
+      
+     let storeData= await Store.findById(storeId)
+
+     if (isStoreSaved) {
+       // If the store is already saved, remove it from the user's savedStores array
+       user.savedStore = user.savedStore.filter((id: any) => id != storeId);
+
+
+       storeData.saveCount -= 1
+       storeData.save()
+      } else {
+        // If the store is not saved, add it to the user's savedStores array
+        user.savedStore.push(storeId);
+        storeData.saveCount = storeData.saveCount*1+1
+        storeData.save()
+     }
+
+     // Save the updated user document
+     await user.save();
+
+     res
+       .status(200)
+       .json({ message: isStoreSaved ? "Store unsaved" : "Store saved" });
+   } catch (error) {
+     console.error("Error saving/unsaving store:", error);
+     res.status(500).json({ message: "Internal server error" });
+   }
+  }
 };
