@@ -13,6 +13,7 @@ class PostController {
         try {
             const { title, cat_id } = req.body;
             const img = await uploadImg(req, res, title);
+            
             const newPost = new PostModel({
                 user: req.user.id,
                 title,
