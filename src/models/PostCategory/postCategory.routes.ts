@@ -1,14 +1,7 @@
 // Import statements and Express app setup (as provided by you)
 
 import express from "express";
-import {
-  DELETE_CATEGORY,
-  GET_CATEGORYBYID_func,
-  GET_CATEGORY_func,
-  POST_CATEGORY_func,
-  UPDATE_CATEGORY,
-} from "./postCategory.contr.js";
-// import superAdminAuthorization from "../../middleware/superAdminAuthorization";
+import PostCategoryController from "./postCategory.contr.js";
 
 const postCategoryRouter = express.Router();
 
@@ -16,11 +9,11 @@ const postCategoryRouter = express.Router();
 
 //  superAdminAuthorization, middleware
 postCategoryRouter
-  .post("/", POST_CATEGORY_func)
-  .get("/", GET_CATEGORY_func)
-  .get("/:id", GET_CATEGORYBYID_func)
-  .put("/:id", UPDATE_CATEGORY)
-  .delete("/:id", DELETE_CATEGORY);
+  .post("/", PostCategoryController.POST_CATEGORY_func)
+  .get("/", PostCategoryController.GET_CATEGORY_func)
+  .get("/:id", PostCategoryController.GET_CATEGORYBYID_func)
+  .put("/:id", PostCategoryController.UPDATE_CATEGORY)
+  .delete("/:id", PostCategoryController.DELETE_CATEGORY);
 
 // POSTS CRUD ROUTES (for authenticated users)
 
