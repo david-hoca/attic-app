@@ -10,5 +10,10 @@ const postSchema = new Schema({
     view: { type: Number, default: 0 },
     likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     uniqueViews: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    cat_id: { type: Schema.Types.ObjectId, ref: 'PostCategory' },
+    likesCount: {
+        type: Number,
+        default: 0,
+    },
 });
 export default model('Post', postSchema);

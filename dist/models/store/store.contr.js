@@ -18,6 +18,8 @@ export default {
     post(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                let token = req.headers.token;
+                const { id: userId } = JWT.VERIFY(token);
                 // Extract data from the request body
                 const { storeTitle, phone, location, categoryId } = req.body;
                 // Check if a file (storeLogo) was uploaded
@@ -59,6 +61,11 @@ export default {
                 newStore.storeLogo = "/storeLogos/" + newStore._id + ext;
                 const savedStore = yield newStore.save();
                 yield catSchema.findByIdAndUpdate(categoryId, {
+                    $push: {
+                        stores: newStore._id,
+                    },
+                });
+                yield User.findByIdAndUpdate(userId, {
                     $push: {
                         stores: newStore._id,
                     },

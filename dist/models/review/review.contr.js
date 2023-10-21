@@ -7,21 +7,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import { JWT } from "../../utils/jwt.js";
 import Store from "../store/store.schema.js";
 import Review from "./review.model.js";
 export default {
     post(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { content, userId, stars } = req.body;
+                const { content, stars, storeId } = req.body;
+                let token = req.headers.token;
+                const { id: userId } = JWT.VERIFY(token);
+                // let userId = req.user.id;
+                console.log(userId);
                 // Create a new Review instance
                 const newReview = new Review({
                     content,
                     userId,
                     stars,
                 });
+                yield Store.findByIdAndUpdate(storeId, {
+                    $push: {
+                        review: newReview._id,
+                    },
+                });
                 // Save the new review to the database
                 const savedReview = yield newReview.save();
+                reviewMid(storeId);
                 res.status(201).json({ data: savedReview }); // Respond with the saved review data
             }
             catch (error) {
@@ -34,6 +45,7 @@ export default {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const reviewId = req.params.id; // Get the review ID from the request parameters
+                reviewMidByReviewId(reviewId);
                 // Find the review by ID
                 const review = yield Review.findById(reviewId);
                 if (!review) {
@@ -59,15 +71,46 @@ export default {
             try {
                 const storeId = req.params.id; // Get the store ID from the request parameters
                 // Find the store by ID
-                const store = yield Store.findById(storeId);
+                const store = yield Store.findById(storeId).populate({
+                    path: "review",
+                    populate: {
+                        path: "userId",
+                        select: ["username", "email"],
+                    },
+                });
                 if (!store) {
                     return res.status(404).json({ message: "Store not found" });
                 }
                 // Get the array of review IDs from the store document
-                const reviewIds = store.review;
-                // Use the review IDs to find the corresponding reviews
-                const reviews = yield Review.find({ _id: { $in: reviewIds } });
-                res.status(200).json(reviews); // Respond with an array of reviews
+                const reviews = store.review;
+                let midStar = store.storeRating;
+                let starCounts = {
+                    one: 0,
+                    two: 0,
+                    tree: 0,
+                    four: 0,
+                    five: 0,
+                };
+                reviews.forEach((e) => {
+                    if (e.stars == 1) {
+                        starCounts.one++;
+                    }
+                    else if (e.stars == 2) {
+                        starCounts.two++;
+                    }
+                    else if (e.stars == 3) {
+                        starCounts.tree++;
+                    }
+                    else if (e.stars == 4) {
+                        starCounts.four++;
+                    }
+                    else if (e.stars == 5) {
+                        starCounts.five++;
+                    }
+                });
+                res
+                    .status(200)
+                    .json({ stars: starCounts, rating: midStar, data: reviews }); // Respond with an array of reviews
             }
             catch (error) {
                 console.error("Error getting reviews by store ID:", error);
@@ -80,12 +123,8 @@ export default {
             try {
                 const reviewId = req.params.id; // Get the review ID from the request parameters
                 // Find the review by ID
-                const review = yield Review.findById(reviewId);
-                if (!review) {
-                    return res.status(404).json({ message: "Review not found" });
-                }
-                // Delete the review
-                yield review.remove();
+                reviewMidByReviewId(reviewId);
+                yield Review.findByIdAndDelete(reviewId);
                 res.status(204).json({ message: "Review deleted" }); // Respond with a 204 status (no content) on successful deletion
             }
             catch (error) {
@@ -95,3 +134,24 @@ export default {
         });
     },
 };
+function reviewMid(storeId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let storeData = yield Store.findById(storeId).populate("review");
+        let starsArr = storeData === null || storeData === void 0 ? void 0 : storeData.review.map((e) => e.stars);
+        let midStars = starsArr.reduce((a, b) => a + b, 0) / starsArr.length;
+        console.log(midStars);
+        storeData.storeRating = midStars.toFixed(1);
+        storeData.save();
+    });
+}
+function reviewMidByReviewId(reviewId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let storeData = yield Store.find({
+            review: {
+                $in: reviewId,
+            },
+        });
+        if (storeData[0])
+            reviewMid(storeData[0]._id);
+    });
+}

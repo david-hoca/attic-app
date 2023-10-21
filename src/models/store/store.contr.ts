@@ -11,6 +11,9 @@ import { log } from "console";
 export default {
   async post(req: Request, res: Response) {
     try {
+       let token: any = req.headers.token;
+      const { id: userId } = JWT.VERIFY(token) as { id: string };
+      
       // Extract data from the request body
       const { storeTitle, phone, location, categoryId } = req.body;
 
@@ -63,6 +66,11 @@ export default {
       const savedStore = await newStore.save();
 
       await catSchema.findByIdAndUpdate(categoryId, {
+        $push: {
+          stores: newStore._id,
+        },
+      });
+      await User.findByIdAndUpdate(userId, {
         $push: {
           stores: newStore._id,
         },

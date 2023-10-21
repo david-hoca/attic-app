@@ -38,6 +38,12 @@ const userSchema = new Schema({
             ref: 'shopStore',
             default: [],
         }],
+    stores: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Store',
+            default: [],
+        }],
+    viewedPosts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
 });
 const UserModel = mongoose.model('User', userSchema);
 export default UserModel;

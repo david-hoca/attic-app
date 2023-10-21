@@ -7,12 +7,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import UserModel from './user.model.js';
-import handleError from '../../utils/catchError.js';
-import { JWT } from '../../utils/jwt.js';
-import { sendConfirmationEmail } from '../../utils/nodemailer.js';
-import { deleteRedisData, getRedisData, setRedisData } from '../../db/redistGlobal.js';
-import crypto from 'crypto';
+import UserModel from "./user.model.js";
+import handleError from "../../utils/catchError.js";
+import { JWT } from "../../utils/jwt.js";
+import { sendConfirmationEmail } from "../../utils/nodemailer.js";
+import { deleteRedisData, getRedisData, setRedisData, } from "../../db/redistGlobal.js";
+import crypto from "crypto";
 class UserController {
     constructor() {
         // Create a new user
@@ -86,6 +86,7 @@ class UserController {
         });
         this.getUserByToken = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log(req.user.role);
                 let token = req.headers.token;
                 let { id } = JWT.VERIFY(token);
                 const user = yield UserModel.findById(id).populate("boughtPost likedPost");
@@ -198,7 +199,7 @@ class UserController {
                 const user = yield UserModel.findOne({ email });
                 if (!user) {
                     // Foydalanuvchi topilmagan
-                    res.status(404).json({ error: 'Foydalanuvchi topilmadi' });
+                    res.status(404).json({ error: "Foydalanuvchi topilmadi" });
                     return;
                 }
                 if (!confirmationCode) {
@@ -208,21 +209,24 @@ class UserController {
                     res.status(200).json({
                         success: true,
                         message: "Foydalanuvchi ma'lumotlari yuborildi. Tasdiqlash kodi yuborildi",
-                        confirmationCode: generatedConfirmationCode // Tasdiqlash kodi javob qaytariladi
+                        confirmationCode: generatedConfirmationCode, // Tasdiqlash kodi javob qaytariladi
                     });
                 }
                 else if (confirmationCode !== (yield getRedisData(email))) {
                     // Tasdiqlash kodi noto'g'ri kiritilgan
                     res.status(400).json({
                         success: false,
-                        error: "Noto'g'ri tasdiqlash kodi"
+                        error: "Noto'g'ri tasdiqlash kodi",
                     });
                 }
                 else {
                     // Tasdiqlash kodi to'g'ri kiritilgan
                     if (password) {
                         // Parolni SHA-256 heshlash
-                        const passwordHash = crypto.createHash('sha256').update(password).digest('hex');
+                        const passwordHash = crypto
+                            .createHash("sha256")
+                            .update(password)
+                            .digest("hex");
                         user.password = passwordHash;
                         // Yangilangan parolni saqlash
                         yield user.save();

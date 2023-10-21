@@ -7,6 +7,8 @@ export interface IPost extends Document {
     title: string;
     img: string;
     view: number;
+    likesCount: number;
     likes: mongoose.Types.ObjectId[];
+    cat_id: mongoose.Types.ObjectId;
     uniqueViews: mongoose.Types.ObjectId[];
-  }
+}

@@ -9,8 +9,6 @@ class advertisementController {
     // Create a new advertisement
     public createAdvertisement = async (req: Request, res: Response): Promise<void> => {
         try {
-
-
             let {
                 title,
                 description,

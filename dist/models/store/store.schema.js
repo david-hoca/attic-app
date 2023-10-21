@@ -25,14 +25,14 @@ const storeSchema = new Schema({
         },
     ],
     storeRating: {
-        type: [String, Number],
+        type: Number,
     },
     phone: {
         type: String,
     },
     saveCount: {
         type: String || Number,
-        default: 0
+        default: 0,
     },
     location: {
         type: String,
