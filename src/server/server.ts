@@ -1,5 +1,6 @@
+// import "../db/mongo.js";
 // import "../db/localMongo.js";
-import "../db/globalMongo.js"
+import "../db/globalMongo.js";
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import path from "path";
@@ -17,19 +18,19 @@ app.use(express.static(`${process.cwd()}/src/public`));
 app.use("/api", indexRouter);
 
 app.get("/api", async (req: Request, res: Response) => {
-    try {
-        res.status(200).json({
-            success: true,
-            message: "Welcome to the Jop API.",
-            postmen: "https://documenter.getpostman.com/view/24139682/2s93si1pwE",
-        });
-    } catch (error: unknown) {
-        res.status(500).json({ success: false, error: (error as Error).message });
-    }
+  try {
+    res.status(200).json({
+      success: true,
+      message: "Welcome to the Jop API.",
+      postmen: "https://documenter.getpostman.com/view/24139682/2s93si1pwE",
+    });
+  } catch (error: unknown) {
+    res.status(500).json({ success: false, error: (error as Error).message });
+  }
 });
 
 app.use(errorMiddleware);
 
 app.listen(PORT, () => {
-    console.log("Server listening on port " + PORT);
+  console.log("Server listening on port " + PORT);
 });

@@ -7,8 +7,7 @@ import storeRouter from "./store/store.routes.js";
 import postRouter from "./Posts/posts.routes.js";
 import postCategoryRouter from "./PostCategory/postCategory.routes.js";
 import ReviewRouter from "./review/review.routes.js";
-router.use("/test", () => {});
-
+router.use("/test", () => { });
 router.use("/category", catRouter);
 router.use("/store", storeRouter);
 router.use("/postCategory", postCategoryRouter);
